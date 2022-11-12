@@ -1,0 +1,19 @@
+{
+    "root":true,
+    "parser":"@typescript-eslint/parser",
+    "plugins":[
+        "@typescript-eslint"
+    ],
+    "extends":[
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "rules":{
+        "no-duplicate-case":2,
+        "no-unreachable":2,
+        "no-unused-vars":2,
+        "no-duplicate-imports":2,
+        "no-dupe-keys":2
+    }
+}
