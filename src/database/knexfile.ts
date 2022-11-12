@@ -1,9 +1,10 @@
+import { Knex } from "knex";
 
 require('ts-node/register')
 require('dotenv').config()
 // Update with your config settings.
 
-const config = {
+const config: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql2",
     connection: {
@@ -40,4 +41,4 @@ const config = {
 
 };
 
-module.exports = config;
+export default config;
