@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 config();
@@ -20,7 +19,6 @@ const verifyToken = async (request, response, next) => {
 
     const decoded = jwt.verify(token, tokenKey);
     request.user = decoded;
-    console.log(decoded);
   } catch (error) {
     return response.status(401).json({
       success: false,

@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { config } from 'dotenv'
 import verifyToken from '../middlewares/auth_middleware'
+import { getUser } from '../helpers/user.helper'
 
 config()
 
@@ -58,35 +59,18 @@ class AuthController {
                 message: '`email` and `password` are required fields'
             })
 
+            let user = await getUser(response, { email: email })
 
+            const token = createToken({ user_id: user.id, email })
 
-            let user = await knex('users').select({
-                id: 'id',
-                first_name: 'first_name',
-                last_name: 'first_name',
-                email: 'email',
-                profile_picture: 'profile_picture',
-                password: 'password'
-            }).where({ email }).timeout(1000)
-
-            let wallet = await knex("wallets").select({
-                wallet_id: 'id',
-                wallet_number: 'wallet_number',
-                wallet_balance: 'wallet_balance',
-            }).where({ user_id: user[0].id })
-
-            const token = createToken({ user_id: user[0].id, email })
-
-            let verified = await verifyPassword(password, user[0].password)
+            let verified = await verifyPassword(password, user.password)
 
             if (!verified) return response.status(403).json({ success: false, message: 'email or password is incorrect' })
 
 
             return response.json({
                 success: true, message: "Login successful!", user: {
-                    ...user[0],
-                    password: null,
-                    ...wallet[0],
+                    ...user,
                     token
                 }
             })
@@ -117,37 +101,24 @@ class AuthController {
             const hashedPassword = await hashPassword(password)
 
 
-
-
             const id = await knex('users').insert({ ...request.body, email: email.toLowerCase(), password: hashedPassword })
 
             let wallet_number = id[0].toString().length < 2 ? 10000000 + id[0] : id[0].toString().length < 3 ? 10000000 + id[0] : 1000000 + id[0]
             const wallet_id = await knex('wallets').insert({ wallet_balance: 0.00, wallet_number, user_id: id })
 
-            const wallet = await knex("wallets").select({
-                wallet_id: 'id',
-                wallet_number: 'wallet_number',
-                wallet_balance: 'wallet_balance',
-            }).where({ id: wallet_id })
 
-            let user = await knex("users").select({
-                id: "id",
-                first_name: 'first_name',
-                last_name: 'last_name',
-                email: 'email',
-
-            }).where({ id })
+            let user = await getUser(response, { id: id })
 
 
-            const token = createToken({ user_id: user[0].id, email })
+            const token = createToken({ user_id: user.id, email })
 
 
             return response.status(201).json({
                 success: true,
                 message: "Registration successful!",
                 user: {
-                    ...user[0],
-                    ...wallet[0],
+                    ...user,
+                    password: null,
                     token
                 },
             })

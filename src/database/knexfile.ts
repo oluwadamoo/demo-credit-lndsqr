@@ -1,6 +1,5 @@
 import { Knex } from "knex";
 
-require('ts-node/register')
 require('dotenv').config()
 // Update with your config settings.
 
