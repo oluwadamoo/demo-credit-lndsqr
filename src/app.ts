@@ -2,29 +2,32 @@ import express, { Application, Request, Response } from "express";
 import dotenv from 'dotenv'
 
 dotenv.config()
-const app: Application = express();
-const port = process.env.PORT || 8080
 
 
 class App {
 
+    app: Application
+    private port: string | number
+
     constructor(controllers: any[]) {
+        this.app = express();
+        this.port = process.env.PORT || 8080
         this.initializeMiddlewares()
         this.initializeControllers(controllers)
     }
 
     private initializeMiddlewares() {
-        app.use(express.json())
+        this.app.use(express.json())
     }
-    private initializeControllers(controllers: any[]) {
+    initializeControllers(controllers: any[]) {
         controllers.forEach((controller) => {
-            app.use("/", controller.router)
+            this.app.use("/api", controller.router)
         })
     }
 
     public listen() {
-        app.listen(port, () => {
-            console.log(`🚀 Server ready at http://localhost:${port}`)
+        this.app.listen(this.port, () => {
+            console.log(`🚀 Server ready at http://localhost:${this.port}`)
         })
     }
 }

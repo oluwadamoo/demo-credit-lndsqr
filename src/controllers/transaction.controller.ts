@@ -20,39 +20,31 @@ class TransactionsController {
 
 
     public initializeRoutes() {
-        this.router.get(`${this.path}/:type/:from/:to`, verifyToken, this.getTransactions)
-        // this.router.post(`${this.path}/fund`, verifyToken, this.deposit)
-        // this.router.post(`${this.path}/transfer`, verifyToken, this.transfer)
-        // this.router.post(`${this.path}/withdraw`, verifyToken, this.withdraw)
+        this.router.get(`${this.path}/`, verifyToken, this.getAllTransactions)
     }
 
 
-    private getTransactions = async (request: any, response: Response) => {
+    private getAllTransactions = async (request: any, response: Response) => {
         try {
             const { user_id } = request.user
-            let { type, from, to } = request.params
-
-            if (from && to) {
-
-            }
-
-            const transactions = await knex("transactions").select({
-                transaction_id: "id",
-                wallet_id: "wallet_id",
-                date: "date",
-                transaction_type: "transaction_type",
-                narration: "narration",
-                balance: "balance",
-
-            }).where({
-                type
-            }).whereBetween(
-                "date", [from, to]
-            )
 
             const wallet = await getWallet(response, { user_id: user_id })
-            return response.status(200).json({ success: true, message: "Wallet retrieved", wallet })
+
+
+            let transactions = await knex("transactions").select({
+                id: "id",
+                wallet_id: "wallet_id",
+                transaction_date: "created_at",
+                balance: "balance",
+                transaction_type: "transaction_type",
+                narration: 'narration'
+
+            }).where({
+                wallet_id: wallet.wallet_id
+            })
+            return response.status(200).json({ success: true, message: "Wallet retrieved", transactions })
         } catch (error) {
+            console.log(error)
             return response.status(500).json({ success: false, message: "An Error Occurred!" })
         }
 

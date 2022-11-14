@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
         t.enum("transaction_type", ["credit", "debit"]);
         t.text("narration")
         t.decimal("balance", 14, 2);
+        t.timestamps(true, true)
 
     })
 
@@ -17,5 +18,6 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
     return knex.schema.dropTable("transactions")
+
 }
 

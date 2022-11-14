@@ -56,7 +56,7 @@ class WalletController {
 
             wallet = await getWallet(response, { user_id: user_id })
 
-            await initTransaction(response, { wallet_id: wallet.id, transaction_type: "credit", narration: "Wallet Funded", balance: wallet.wallet_balance })
+            await initTransaction(response, { wallet_id: wallet.wallet_id, transaction_type: "credit", narration: "Wallet Funded", balance: wallet.wallet_balance })
 
 
             return response.status(200).json({ success: true, message: "Deposit successful!", wallet })
@@ -96,8 +96,8 @@ class WalletController {
             my_wallet = await getWallet(response, { user_id: user_id })
             recipient_wallet = await getWallet(response, { wallet_number: recipient })
 
-            await initTransaction(response, { wallet_id: my_wallet.id, transaction_type: "debit", narration: narration ? narration : "", balance: my_wallet.wallet_balance })
-            await initTransaction(response, { wallet_id: recipient_wallet.id, transaction_type: "credit", narration: narration ? narration : "", balance: recipient_wallet.wallet_balance })
+            await initTransaction(response, { wallet_id: my_wallet.wallet_id, transaction_type: "debit", narration: narration ? narration : "", balance: my_wallet.wallet_balance })
+            await initTransaction(response, { wallet_id: recipient_wallet.wallet_id, transaction_type: "credit", narration: narration ? narration : "", balance: recipient_wallet.wallet_balance })
 
             return response.status(200).json({ success: true, message: "Transfer successful!", my_wallet })
 
@@ -113,7 +113,7 @@ class WalletController {
             const { amount, } = request.body
             const { user_id } = request.user
 
-            if (!amount) return response.status(400).json({ success: false, message: "Deposit amount is required!" })
+            if (!amount) return response.status(400).json({ success: false, message: "Withdrawal amount is required!" })
 
 
             let my_wallet = await getWallet(response, { user_id: user_id })
@@ -129,7 +129,7 @@ class WalletController {
 
             my_wallet = await getWallet(response, { user_id: user_id })
 
-            await initTransaction(response, { wallet_id: my_wallet.id, transaction_type: "debit", narration: "Wallet withdrawal", balance: my_wallet.wallet_balance })
+            await initTransaction(response, { wallet_id: my_wallet.wallet_id, transaction_type: "debit", narration: "Wallet withdrawal", balance: my_wallet.wallet_balance })
 
 
             return response.status(200).json({ success: true, message: "Withdrawal successful!", my_wallet })
