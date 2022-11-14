@@ -14,7 +14,7 @@ Demo Credit is a mobile lending app that requires wallet functionality. This is 
 
 - Clone this repository [here](https://github.com/oluwadamoo/demo-credit-lndsqr.git)
 - Run yarn to install all dependencies
-- Create an .env file in your project root folder and add your variables. see .env.sample for assistance.
+- Create an .env file in your project root folder and add your variables. see .env.example for assistance.
 
 ### Usage
 
