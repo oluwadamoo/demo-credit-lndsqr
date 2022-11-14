@@ -10,7 +10,7 @@
     "knex:migrate:latest": "knex --knexfile src/database/knexfile.ts migrate:latest",
     "knex:migrate:rollback": "knex --knexfile src/database/knexfile.ts migrate:rollback",
     "start:dev": "nodemon",
-    "start": "npm run build && node build/index.js",
+    "start": "npm run knex:migrate:latest && npm run build && node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damilola Saliu",
